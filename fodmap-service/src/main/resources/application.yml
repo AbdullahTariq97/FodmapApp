@@ -1,0 +1,11 @@
+files:
+  services: "readiness/services-local.yml"
+
+app:
+  name: ${rootProject.name}
+  description: ${description}
+  encoding: ${compileJava.options.getEncoding()}
+  version: ${version}
+  java:
+    target: ${targetCompatibility}
+    source: ${sourceCompatibility}

@@ -1,0 +1,9 @@
+rootProject.name = 'FodmapApp'
+include 'functional-tests'
+include 'wiremock'
+include 'fodmap-service'
+include 'wiremock-two'
+include 'functional-tests'
+include 'functional-test'
+include 'functional-test'
+
