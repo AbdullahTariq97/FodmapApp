@@ -3,7 +3,7 @@
   "applicationVersion":"0.0.1-SNAPSHOT",
   "checkResults":
   {"HeightApp":
-  {"additionalProp1":
-  {"response":"Downstream Not Healthy, internal server error"}, "healthy":false}
-  }
+    {"additionalProp1":
+      {"response":"Downstream Not Healthy, internal server error"}, "healthy":false}
+    }
 }

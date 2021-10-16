@@ -3,7 +3,6 @@ package com.sky.fodmapApp.ft.glue;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
-//import com.sky.fodmapApp.ft.config.CucumberSpringContextConfigration;
 import com.sky.fodmapApp.Models.ReadinessDTO;
 import com.sky.fodmapApp.ft.config.CucumberSpringContextConfigration;
 import io.cucumber.java.en.Given;
@@ -11,7 +10,6 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
@@ -107,16 +105,19 @@ public class ReadinessStepDefinitions {
     @Then("the response body matching {string} should be returned")
     public void the_response_body_matching_should_be_returned(String mappingFileName) {
         ObjectMapper objectMapper = new ObjectMapper();
-        ReadinessDTO expectedReadinessDTO;
-        Optional<InputStream> stream = Optional.ofNullable(getClass().getClassLoader().getResourceAsStream("features/expected-mappings" + mappingFileName));
+        // Load the stream of expected ReadinessDTO's
+        Optional<InputStream> stream = Optional.ofNullable(getClass().getClassLoader().getResourceAsStream("features/expected-mappings/" + mappingFileName));
         if(!stream.isEmpty()){
             try {
                 ReadinessDTO actualReadinessDTO = objectMapper.readValue(httpResponse.body(), ReadinessDTO.class);
-                expectedReadinessDTO = objectMapper.readValue(stream.get(), ReadinessDTO.class);
+                ReadinessDTO expectedReadinessDTO = objectMapper.readValue(stream.get(), ReadinessDTO.class);
+                System.out.println("The " + counter + " expected response is " + expectedReadinessDTO);
                 assertThat(actualReadinessDTO).extracting("applicationName", "checkResults").containsExactly(expectedReadinessDTO.getApplicationName(), expectedReadinessDTO.getCheckResults());
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            System.out.println("stream is empty");
         }
     }
 
