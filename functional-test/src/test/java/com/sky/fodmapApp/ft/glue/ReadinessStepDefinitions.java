@@ -1,8 +1,10 @@
 package com.sky.fodmapApp.ft.glue;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 //import com.sky.fodmapApp.ft.config.CucumberSpringContextConfigration;
+import com.sky.fodmapApp.Models.ReadinessDTO;
 import com.sky.fodmapApp.ft.config.CucumberSpringContextConfigration;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -13,11 +15,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Optional;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
@@ -29,7 +33,7 @@ public class ReadinessStepDefinitions {
     private HttpResponse<String> httpResponse;
     private static final int WIREMOCK_PORT = 9000;
     private static final WireMockServer wiremockServer = new WireMockServer(options().port(WIREMOCK_PORT));
-
+    private static int counter = 0;
 
     @PostConstruct
     public void startupWiremockServer(){
@@ -45,7 +49,7 @@ public class ReadinessStepDefinitions {
     @Given("that the downstream {string} is healthy")
     public void that_the_downstream_is_healthy(String string) {
         stubFor(
-                get(urlEqualTo(String.format("/%s/private/status", string.toLowerCase())))
+                get(urlEqualTo("/" + string.toLowerCase()))
                         .willReturn(
                                 aResponse()
                                         .withHeader("Content-Type","text/plain")
@@ -58,7 +62,7 @@ public class ReadinessStepDefinitions {
     @Given("that the downstream {string} is not healthy")
     public void that_the_downstream_is_not_healthy(String string) {
         stubFor(
-                get(urlEqualTo(String.format("/%s/private/status", string.toLowerCase())))
+                get(urlEqualTo("/" + string.toLowerCase()))
                         .willReturn(
                                 aResponse()
                                         .withHeader("Content-Type","text/plain")
@@ -87,6 +91,9 @@ public class ReadinessStepDefinitions {
             HttpClient httpClient = HttpClient.newHttpClient();
             httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
+            System.out.println("The " + counter + " response is " + httpResponse.body());
+            counter = counter + 1;
+
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -98,8 +105,19 @@ public class ReadinessStepDefinitions {
     }
 
     @Then("the response body matching {string} should be returned")
-    public void the_response_body_matching_should_be_returned(String string) {
-
+    public void the_response_body_matching_should_be_returned(String mappingFileName) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ReadinessDTO expectedReadinessDTO;
+        Optional<InputStream> stream = Optional.ofNullable(getClass().getClassLoader().getResourceAsStream("features/expected-mappings" + mappingFileName));
+        if(!stream.isEmpty()){
+            try {
+                ReadinessDTO actualReadinessDTO = objectMapper.readValue(httpResponse.body(), ReadinessDTO.class);
+                expectedReadinessDTO = objectMapper.readValue(stream.get(), ReadinessDTO.class);
+                assertThat(actualReadinessDTO).extracting("applicationName", "checkResults").containsExactly(expectedReadinessDTO.getApplicationName(), expectedReadinessDTO.getCheckResults());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 

@@ -1,0 +1,9 @@
+{"applicationName":"FodmapApp",
+  "applicationEnvironment":"[]",
+  "applicationVersion":"0.0.1-SNAPSHOT",
+  "checkResults":
+    {"HeightApp":
+      {"additionalProp1":
+        {"response":null}, "healthy":true}
+      }
+}

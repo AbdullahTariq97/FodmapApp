@@ -106,6 +106,7 @@ public class ReadinessService {
                 downstreams.put(element.getName(), downstreamServiceDTO);
 
             } catch (IOException | InterruptedException e) {
+                // need to set healthy to false
                 Map<String, String> response = new HashMap<>();
                 response.put("response", e.getCause().toString());
                 downstreamServiceDTO.setAdditionalProp1(response);

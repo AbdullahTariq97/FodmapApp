@@ -1,6 +1,7 @@
 FROM registry.tools.cosmic.sky/core-engineering/release/alpine-java11:v0.14.0
 
 ADD build/libs/*-all.jar /data/service.jar
+ADD mappings /data/mappings
 
 EXPOSE 9000
 
