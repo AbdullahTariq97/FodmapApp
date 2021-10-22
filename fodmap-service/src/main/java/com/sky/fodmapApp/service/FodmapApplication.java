@@ -1,4 +1,4 @@
-package com.sky.fodmapApp;
+package com.sky.fodmapApp.service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

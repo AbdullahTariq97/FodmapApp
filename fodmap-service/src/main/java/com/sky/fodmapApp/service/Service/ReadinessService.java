@@ -1,15 +1,14 @@
-package com.sky.fodmapApp.Service;
+package com.sky.fodmapApp.service.Service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.sky.fodmapApp.Models.DownstreamAddress;
-import com.sky.fodmapApp.Models.DownstreamServiceDTO;
+import com.sky.fodmapApp.service.Models.DownstreamAddress;
+import com.sky.fodmapApp.service.Models.DownstreamServiceDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;

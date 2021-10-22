@@ -1,4 +1,4 @@
-package com.sky.fodmapApp.Models;
+package com.sky.fodmapApp.service.Models;
 
 import lombok.Data;
 

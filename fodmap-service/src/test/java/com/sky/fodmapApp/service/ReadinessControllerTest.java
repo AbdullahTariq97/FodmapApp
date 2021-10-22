@@ -1,21 +1,18 @@
-package com.sky.fodmapApp;
+package com.sky.fodmapApp.service;
 
-import com.sky.fodmapApp.Controllers.ReadinessController;
-import com.sky.fodmapApp.Models.ApplicationPropertiesDTO;
-import com.sky.fodmapApp.Models.DownstreamServiceDTO;
-import com.sky.fodmapApp.Models.ReadinessDTO;
-import com.sky.fodmapApp.Service.PropertiesService;
-import com.sky.fodmapApp.Service.ReadinessService;
+import com.sky.fodmapApp.service.Controllers.ReadinessController;
+import com.sky.fodmapApp.service.Models.ApplicationPropertiesDTO;
+import com.sky.fodmapApp.service.Models.DownstreamServiceDTO;
+import com.sky.fodmapApp.service.Models.ReadinessDTO;
+import com.sky.fodmapApp.service.Service.PropertiesService;
+import com.sky.fodmapApp.service.Service.ReadinessService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Mockito.*;

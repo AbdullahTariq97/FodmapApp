@@ -1,10 +1,10 @@
-package com.sky.fodmapApp;
+package com.sky.fodmapApp.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.sky.fodmapApp.Models.DownstreamAddress;
-import com.sky.fodmapApp.Service.ReadinessService;
+import com.sky.fodmapApp.service.Models.DownstreamAddress;
+import com.sky.fodmapApp.service.Service.ReadinessService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -36,7 +36,7 @@ public class ReadinessServiceTest {
         List<DownstreamAddress> downstreamAddressList = readinessService.getDownstreamAddresses();
         assertThat(downstreamAddressList.get(0))
                 .extracting("name", "address")
-                .containsExactly("HeightApp", "http://localhost:9000/heightApp");
+                .containsExactly("HeightApp", "http://localhost:9000/heightapp");
     }
 
     @Test

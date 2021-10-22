@@ -1,12 +1,10 @@
-package com.sky.fodmapApp.Controllers;
+package com.sky.fodmapApp.service.Controllers;
 
-import com.sky.fodmapApp.Models.ApplicationPropertiesDTO;
-import com.sky.fodmapApp.Models.ReadinessDTO;
-import com.sky.fodmapApp.Service.PropertiesService;
-import com.sky.fodmapApp.Service.ReadinessService;
-import lombok.extern.slf4j.Slf4j;
+import com.sky.fodmapApp.service.Models.ApplicationPropertiesDTO;
+import com.sky.fodmapApp.service.Models.ReadinessDTO;
+import com.sky.fodmapApp.service.Service.PropertiesService;
+import com.sky.fodmapApp.service.Service.ReadinessService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 

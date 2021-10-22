@@ -18,10 +18,10 @@ jar {
     }
 }
 
-task runWiremock(type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
-    main = 'com.github.tomakehurst.wiremock.standalone.WireMockServerRunner'
-    args "--port", 9000
-}
+//task runWiremock(type: JavaExec) {
+//    classpath = sourceSets.main.runtimeClasspath
+//    main = 'com.github.tomakehurst.wiremock.standalone.WireMockServerRunner'
+//    args "--port", 9000
+//}
 
 build.dependsOn(shadowJar)

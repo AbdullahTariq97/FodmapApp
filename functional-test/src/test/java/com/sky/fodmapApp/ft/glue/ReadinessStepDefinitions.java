@@ -3,7 +3,7 @@ package com.sky.fodmapApp.ft.glue;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.sky.fodmapApp.Models.ReadinessDTO;
+import com.sky.fodmapApp.service.Models.ReadinessDTO;
 import com.sky.fodmapApp.ft.config.CucumberSpringContextConfigration;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -20,7 +20,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Optional;
-
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,7 +30,6 @@ public class ReadinessStepDefinitions {
     private HttpResponse<String> httpResponse;
     private static final int WIREMOCK_PORT = 9000;
     private static final WireMockServer wiremockServer = new WireMockServer(options().port(WIREMOCK_PORT));
-    private static int counter = 0;
 
     @PostConstruct
     public void startupWiremockServer(){
@@ -89,9 +87,6 @@ public class ReadinessStepDefinitions {
             HttpClient httpClient = HttpClient.newHttpClient();
             httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
-            System.out.println("The " + counter + " response is " + httpResponse.body());
-            counter = counter + 1;
-
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -111,13 +106,10 @@ public class ReadinessStepDefinitions {
             try {
                 ReadinessDTO actualReadinessDTO = objectMapper.readValue(httpResponse.body(), ReadinessDTO.class);
                 ReadinessDTO expectedReadinessDTO = objectMapper.readValue(stream.get(), ReadinessDTO.class);
-                System.out.println("The " + counter + " expected response is " + expectedReadinessDTO);
                 assertThat(actualReadinessDTO).extracting("applicationName", "checkResults").containsExactly(expectedReadinessDTO.getApplicationName(), expectedReadinessDTO.getCheckResults());
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
-            System.out.println("stream is empty");
         }
     }
 
