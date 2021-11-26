@@ -9,14 +9,18 @@ import java.util.Arrays;
 
 @Service
 public class PropertiesService {
+
     @Autowired
     private Environment environment;
 
-    public com.sky.fodmapApp.service.Models.ApplicationPropertiesDTO getProperties(){
-        com.sky.fodmapApp.service.Models.ApplicationPropertiesDTO applicationPropertiesDTO = new ApplicationPropertiesDTO();
+    public ApplicationPropertiesDTO getProperties(){
+
+        ApplicationPropertiesDTO applicationPropertiesDTO = new ApplicationPropertiesDTO();
+
         applicationPropertiesDTO.setName(environment.getProperty("app.name"));
         applicationPropertiesDTO.setEnvironment(Arrays.toString(environment.getActiveProfiles()));
         applicationPropertiesDTO.setVersion(environment.getProperty("app.version"));
+
         return applicationPropertiesDTO;
     }
 }

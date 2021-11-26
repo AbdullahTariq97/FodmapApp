@@ -9,3 +9,12 @@ app:
   java:
     target: ${targetCompatibility}
     source: ${sourceCompatibility}
+
+management:
+  endpoints:
+    web:
+      base-path: "/private"
+      exposure:
+        include: "prometheus,readiness"
+      path-mapping:
+        prometheus: "metrics"

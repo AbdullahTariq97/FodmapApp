@@ -30,6 +30,9 @@ dependencies {
     //Needs to import the YAMLFactory class
     // PROJECT
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
 }
 
 processResources {

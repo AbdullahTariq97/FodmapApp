@@ -8,6 +8,7 @@ public class FodmapApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(FodmapApplication.class, args);
+
 	}
 
 }

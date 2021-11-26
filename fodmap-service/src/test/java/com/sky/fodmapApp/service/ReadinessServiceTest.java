@@ -10,9 +10,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.env.Environment;
+import org.springframework.test.web.servlet.MockMvc;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
@@ -54,5 +57,4 @@ public class ReadinessServiceTest {
         assertTrue(readinessService.getDownstreamAddresses().isEmpty());
     }
 
-   // Why isnt there unit tests for the getServices method?
 }
