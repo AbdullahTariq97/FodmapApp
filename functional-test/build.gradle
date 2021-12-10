@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'org.springframework.boot' version '2.5.4'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
 version 'unspecified'
@@ -9,6 +11,9 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.projectlombok:lombok:1.18.18'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
     testImplementation project(":fodmap-service")
 
 // This dependency bring in the class Cucumber and CucumberOptions
@@ -32,8 +37,16 @@ dependencies {
     testImplementation "com.github.tomakehurst:wiremock-jre8:2.27.2"
     testImplementation "com.github.tomakehurst:wiremock-jre8-standalone:2.27.2"
 
+// Cassandra for test
+    testImplementation 'com.github.docker-java:docker-java:3.1.5'
+    testImplementation 'org.awaitility:awaitility:4.0.1'
 
-    implementation 'org.springframework:spring-test:5.3.10'
+    implementation 'com.datastax.cassandra:cassandra-driver-mapping:3.11.0'
+    implementation 'org.springframework.data:spring-data-cassandra:2.2.10.RELEASE'
+    implementation 'com.datastax.cassandra:cassandra-driver-core:3.11.0'
+
+    implementation 'com.codahale.metrics:metrics-core:3.0.2'
+
 }
 
 test {

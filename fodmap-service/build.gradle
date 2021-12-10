@@ -26,12 +26,23 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '6.10.4'
-    //Needs to import the YAMLFactory class
-    // PROJECT
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
-
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+//    // This gives you the cassandra repository class
+    implementation 'com.datastax.cassandra:cassandra-driver-core:3.11.0'
+//
+    implementation 'org.springframework.data:spring-data-cassandra:2.2.10.RELEASE'
+// Why do we have to add this to avoid Caused by: java.lang.ClassNotFoundException: com.codahale.metrics.JmxReporter
+    implementation 'com.codahale.metrics:metrics-core:3.0.2'
+
+//
+//    // For running embedded cassandra
+//    implementation 'org.cassandraunit:cassandra-unit-spring:4.3.1.0'
+//    implementation 'org.cassandraunit:cassandra-unit-shaded:4.3.1.0'
+//    implementation 'org.hectorclient:hector-core:2.0-0'
+
+
+
 
 }
 
