@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.sky.fodmap.service.models.FodmapDto;
 import com.sky.fodmap.service.models.FoodItem;
 import com.sky.fodmapApp.ft.config.CucumberSpringContextConfigration;
 import com.sky.fodmap.service.models.ReadinessDto;
@@ -17,7 +16,6 @@ import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.util.UriComponentsBuilder;
-import wiremock.net.minidev.json.writer.JsonReader;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -28,7 +26,6 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,7 +33,6 @@ import java.util.Optional;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ContextConfiguration(classes = CucumberSpringContextConfigration.class)
@@ -153,9 +149,9 @@ public class ReadinessStepDefinitions {
         ObjectMapper objectMapper = new ObjectMapper();
 
         FoodItem returnedFoodItem = objectMapper.readValue(httpResponse.body(), new TypeReference<>() {});
-        FodmapDto expectedFodmapDto = objectMapper.readValue(expectedFoodItem.get("data"), new TypeReference<>() {});
+        FodmapData expectedFodmapData = objectMapper.readValue(expectedFoodItem.get("data"), new TypeReference<>() {});
 
         assertThat(returnedFoodItem).extracting("foodGroup","name").containsExactly(expectedFoodItem.get("foodGroup"),expectedFoodItem.get("name"));
-        assertThat(returnedFoodItem.getData()).usingRecursiveComparison().isEqualTo(expectedFodmapDto);
+        assertThat(returnedFoodItem.getData()).usingRecursiveComparison().isEqualTo(expectedFodmapData);
     }
 }

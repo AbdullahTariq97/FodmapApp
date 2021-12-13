@@ -1,4 +1,4 @@
-package com.sky.fodmap.service.models;
+package com.sky.fodmap.service.enums;
 
 public enum Colours {
     RED,

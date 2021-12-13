@@ -1,8 +1,8 @@
 CREATE KEYSPACE IF NOT EXISTS fodmap WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1 };
 
-CREATE TYPE fodmap.fodmap_data(overall_rating text,stratified_green map<text,text>,stratified_amber map<text,text>, stratified_red map<text,text>);
+CREATE TYPE fodmap.stratified_data(amount int, fructose text, lactose text, manitol text, sorbitol text, gos text, fructan text);
 
-CREATE TABLE fodmap.food_item (food_group text, name text, data frozen<fodmap_data>, PRIMARY KEY (food_group,name)
+CREATE TABLE fodmap.food_item (food_group text, name text, overall_rating text, data frozen<map<text,stratified_data>>, PRIMARY KEY (food_group,name)
 ) WITH bloom_filter_fp_chance = 0.1
     AND caching = {'keys':'ALL', 'rows_per_partition':'NONE'}
     AND comment = ''
@@ -16,4 +16,3 @@ CREATE TABLE fodmap.food_item (food_group text, name text, data frozen<fodmap_da
     AND min_index_interval = 128
     AND read_repair_chance = 0.0
     AND speculative_retry = '99.0PERCENTILE';
-
