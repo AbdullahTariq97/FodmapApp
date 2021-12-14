@@ -25,12 +25,6 @@ public class FoodItem {
     @Column("overall_rating")
     private String overallRating;
 
-    @CassandraType(type = DataType.Name.UDT, userTypeName = "stratified_green" )
-    private StratifiedData stratifiedGreen;
-
-    @CassandraType(type = DataType.Name.UDT, userTypeName = "stratified_amber" )
-    private StratifiedData stratifiedAmber;
-
-    @CassandraType(type = DataType.Name.UDT, userTypeName = "stratified_red")
-    private StratifiedData stratifiedRed;
+    @CassandraType(type = DataType.Name.UDT, userTypeName = "data" )
+    private AggregatedData data;
 }

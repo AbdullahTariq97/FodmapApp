@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface ItemRespository extends CassandraRepository<FoodItem,String> {
 
-    @Query("select * from fodmap.food_item where food_group = ?0")
+    @Query("SELECT * FROM fodmap.food_item WHERE food_group = ?0")
     List<FoodItem> findByFoodGroup(String name);
 }

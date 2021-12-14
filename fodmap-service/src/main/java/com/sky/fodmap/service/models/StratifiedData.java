@@ -30,72 +30,72 @@ public class StratifiedData {
     @CassandraType(type = DataType.Name.TEXT, userTypeName = "fructan" )
     private String fructan;
 
-    public static StratifiedDtoBuilder builder(){
-        return new StratifiedDtoBuilder();
-    }
-
-    private StratifiedData(StratifiedDtoBuilder stratifiedDtoBuilder){
-
-        this.amount = stratifiedDtoBuilder.amount;
-        this.fructose = stratifiedDtoBuilder.fructose;
-        this.lactose = stratifiedDtoBuilder.lactose;
-        this.manitol = stratifiedDtoBuilder.manitol;
-        this.sorbitol = stratifiedDtoBuilder.sorbitol;
-        this.gos = stratifiedDtoBuilder.gos;
-        this.fructan = stratifiedDtoBuilder.fructan;
-    }
-
-    public static class StratifiedDtoBuilder {
-
-        private int amount;
-        private String fructose;
-        private String lactose;
-        private String manitol;
-        private String sorbitol;
-        private String gos;
-        private String fructan;
-
-        public StratifiedDtoBuilder(){
-        }
-
-        public StratifiedDtoBuilder amountInGrams(int grams){
-            this.amount = grams;
-            return this;
-        }
-
-        public StratifiedDtoBuilder fructose(String rating){
-            this.fructose = rating;
-            return this;
-        }
-
-        public StratifiedDtoBuilder lactose(String rating){
-            this.lactose = rating;
-            return this;
-        }
-
-        public StratifiedDtoBuilder manitol(String rating){
-            this.manitol = rating;
-            return this;
-        }
-
-        public StratifiedDtoBuilder sorbitol(String rating){
-            this.sorbitol = rating;
-            return this;
-        }
-
-        public StratifiedDtoBuilder gos(String rating){
-            this.gos = rating;
-            return this;
-        }
-
-        public StratifiedDtoBuilder fructan(String rating){
-            this.fructan = rating;
-            return this;
-        }
-
-        public StratifiedData build(){
-            // private constructor can be accessed
-            return new StratifiedData(this);
-        }
-    }
+//    public static StratifiedDtoBuilder builder(){
+//        return new StratifiedDtoBuilder();
+//    }
+//
+//    private StratifiedData(StratifiedDtoBuilder stratifiedDtoBuilder){
+//
+//        this.amount = stratifiedDtoBuilder.amount;
+//        this.fructose = stratifiedDtoBuilder.fructose;
+//        this.lactose = stratifiedDtoBuilder.lactose;
+//        this.manitol = stratifiedDtoBuilder.manitol;
+//        this.sorbitol = stratifiedDtoBuilder.sorbitol;
+//        this.gos = stratifiedDtoBuilder.gos;
+//        this.fructan = stratifiedDtoBuilder.fructan;
+//    }
+//
+//    public static class StratifiedDtoBuilder {
+//
+//        private int amount;
+//        private String fructose;
+//        private String lactose;
+//        private String manitol;
+//        private String sorbitol;
+//        private String gos;
+//        private String fructan;
+//
+//        public StratifiedDtoBuilder(){
+//        }
+//
+//        public StratifiedDtoBuilder amountInGrams(int grams){
+//            this.amount = grams;
+//            return this;
+//        }
+//
+//        public StratifiedDtoBuilder fructose(String rating){
+//            this.fructose = rating;
+//            return this;
+//        }
+//
+//        public StratifiedDtoBuilder lactose(String rating){
+//            this.lactose = rating;
+//            return this;
+//        }
+//
+//        public StratifiedDtoBuilder manitol(String rating){
+//            this.manitol = rating;
+//            return this;
+//        }
+//
+//        public StratifiedDtoBuilder sorbitol(String rating){
+//            this.sorbitol = rating;
+//            return this;
+//        }
+//
+//        public StratifiedDtoBuilder gos(String rating){
+//            this.gos = rating;
+//            return this;
+//        }
+//
+//        public StratifiedDtoBuilder fructan(String rating){
+//            this.fructan = rating;
+//            return this;
+//        }
+//
+//        public StratifiedData build(){
+//            // private constructor can be accessed
+//            return new StratifiedData(this);
+//        }
+//    }
 }
