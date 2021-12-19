@@ -6,4 +6,5 @@ include 'wiremock-two'
 include 'functional-tests'
 include 'functional-test'
 include 'functional-test'
+include 'cassandra'
 

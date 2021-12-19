@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cassandra
+  labels:
+    app: cassandra
+spec:
+  containers:
+    - name: cassandra
+      image: local/fodmap-cassandra
+      ports:
+        - containerPort: 9042
+          name: http
+          protocol: TCP
+      imagePullPolicy: Never
+# k8s will attempt to pull an image of the name specified from remote docker hub registry
+# to direct it to pull image from local docker registry add the line imagePullPolicy: Never
+
