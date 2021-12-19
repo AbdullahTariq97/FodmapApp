@@ -44,7 +44,7 @@ public class GlobalExceptionHandlerTest {
                 .thenThrow(new NotFoundException("food group", "dairy"));
 
         // When and then
-        mockMvc.perform(get("/get-by-group-and-name/dairy/milk"))
+        mockMvc.perform(get("/user/get-by-group-and-name/dairy/milk"))
                 .andExpect(status().is(404))
                 .andExpect(content().string("Food item with food group dairy not found"));
     }

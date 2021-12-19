@@ -54,9 +54,9 @@ public class ItemControllerTest {
     public void whenFoodItemRequestedByGroupAndName_shouldReturnFoodItem(){
         // Given
         FoodItem itemReturnedByService = FoodItem.builder().foodGroup(FoodGroups.FRUIT.name()).name("apple, granny smith").data(
-                Map.of(Colours.RED.name(),StratifiedData.builder().amountInGrams(165).fructose("red").lactose("green").manitol("green").sorbitol("red").gos("green").fructan("green").build(),
-                        Colours.GREEN.name(), StratifiedData.builder().amountInGrams(30).fructose("green").lactose("green").manitol("green").sorbitol("red").gos("green").fructan("green").build(),
-                        Colours.AMBER.name(),StratifiedData.builder().amountInGrams(25).fructose("green").lactose("green").manitol("green").sorbitol("green").gos("green").fructan("green").build())).build();
+                Map.of(Colours.R.name(),StratifiedData.builder().amountInGrams(165).fructose("red").lactose("green").manitol("green").sorbitol("red").gos("green").fructan("green").build(),
+                        Colours.G.name(), StratifiedData.builder().amountInGrams(30).fructose("green").lactose("green").manitol("green").sorbitol("red").gos("green").fructan("green").build(),
+                        Colours.A.name(),StratifiedData.builder().amountInGrams(25).fructose("green").lactose("green").manitol("green").sorbitol("green").gos("green").fructan("green").build())).build();
 
         when(itemService.getByGroupAndName("fruit","apple, granny smith")).thenReturn(itemReturnedByService);
 

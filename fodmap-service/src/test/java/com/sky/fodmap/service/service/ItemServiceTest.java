@@ -61,23 +61,22 @@ public class ItemServiceTest {
         assertEquals(listOfFoodGroups.stream().distinct().collect(Collectors.toList()).size(), listOfFoodGroups.size());
     }
 
-    // should throw not found exception if
-
     @Test
     public void givenTheItemExists_whenFoodItemRequestedByGroupAndName_shouldReturnFoodItem(){
         // Given
-        FoodItem itemReturnedByRepo= FoodItem.builder().foodGroup(FoodGroups.VEGITABLE.name()).name("apple, granny smith").data(
-                Map.of(Colours.RED.name(),StratifiedData.builder().amountInGrams(165).fructose("red").lactose("green").manitol("green").sorbitol("red").gos("green").fructan("green").build(),
-                        Colours.RED.name(),StratifiedData.builder().amountInGrams(30).fructose("green").lactose("green").manitol("green").sorbitol("red").gos("green").fructan("green").build(),
-                        Colours.RED.name(),StratifiedData.builder().amountInGrams(25).fructose("green").lactose("green").manitol("green").sorbitol("green").gos("green").fructan("green").build())).build();
+        FoodItem apple = FoodItem.builder().foodGroup(FoodGroups.FRUIT.name()).name("apple granny smith").overallRating("R").data(
+                Map.of(Colours.R.name(),StratifiedData.builder().amountInGrams(165).fructose("R").lactose("G").manitol("G").sorbitol("R").gos("G").fructan("G").build())).build();
 
-        when(itemRespository.findByFoodGroup(FoodGroups.FRUIT.name().toLowerCase())).thenReturn(List.of(itemReturnedByRepo));
+        FoodItem apricot = FoodItem.builder().foodGroup(FoodGroups.FRUIT.name()).name("apricot").overallRating("R").data(
+                Map.of(Colours.R.name(),StratifiedData.builder().amountInGrams(70).fructose("G").lactose("G").manitol("G").sorbitol("R").gos("G").fructan("A").build())).build();
+
+        when(itemRespository.findByFoodGroup(FoodGroups.FRUIT.name().toLowerCase())).thenReturn(List.of(apple,apricot));
 
         // When
-        FoodItem itemReturnedByService = itemService.getByGroupAndName(FoodGroups.FRUIT.name().toLowerCase(), "apple, granny smith");
+        FoodItem itemReturnedByService = itemService.getByGroupAndName(FoodGroups.FRUIT.name().toLowerCase(), "apple granny smith");
 
         // Then
-        assertEquals(itemReturnedByService, itemReturnedByRepo);
+        assertEquals(itemReturnedByService, apple);
     }
 
     @Test
@@ -91,17 +90,15 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void givenItemWithFoodGroupExistsButNotNamet_whenFoodItemRequestedByGroupAndName_shouldThrowSuitableNotFoundException(){
+    public void givenItemWithFoodGroupExistsButNotName_whenFoodItemRequestedByGroupAndName_shouldThrowSuitableNotFoundException(){
         // Given
-        FoodItem itemReturnedByRepo = FoodItem.builder().foodGroup(FoodGroups.VEGITABLE.name()).name("apple, granny smith").data(
-                Map.of(Colours.RED.name(),StratifiedData.builder().amountInGrams(165).fructose("red").lactose("green").manitol("green").sorbitol("red").gos("green").fructan("green").build(),
-                        Colours.RED.name(),StratifiedData.builder().amountInGrams(30).fructose("green").lactose("green").manitol("green").sorbitol("red").gos("green").fructan("green").build(),
-                        Colours.RED.name(),StratifiedData.builder().amountInGrams(25).fructose("green").lactose("green").manitol("green").sorbitol("green").gos("green").fructan("green").build())).build();
+        FoodItem apricot = FoodItem.builder().foodGroup(FoodGroups.FRUIT.name()).name("apricot").overallRating("R").data(
+                Map.of(Colours.R.name(),StratifiedData.builder().amountInGrams(70).fructose("G").lactose("G").manitol("G").sorbitol("R").gos("G").fructan("A").build())).build();
 
-        when(itemRespository.findByFoodGroup(FoodGroups.FRUIT.name().toLowerCase())).thenReturn(List.of(itemReturnedByRepo));
+        when(itemRespository.findByFoodGroup(FoodGroups.FRUIT.name().toLowerCase())).thenReturn(List.of(apricot));
 
         // When and Then
-        NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> itemService.getByGroupAndName(FoodGroups.FRUIT.name().toLowerCase(), "apricot"));
-        assertThat(notFoundException).extracting("fieldNotFound", "fieldValue").containsExactly("food name", "apricot");
+        NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> itemService.getByGroupAndName(FoodGroups.FRUIT.name().toLowerCase(), "guava"));
+        assertThat(notFoundException).extracting("fieldNotFound", "fieldValue").containsExactly("food name", "guava");
     }
 }
