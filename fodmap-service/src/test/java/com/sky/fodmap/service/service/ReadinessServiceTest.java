@@ -2,7 +2,6 @@ package com.sky.fodmap.service.service;
 
 import com.sky.fodmap.service.models.DownstreamAddress;
 import com.sky.fodmap.service.models.DownstreamDto;
-import com.sky.fodmap.service.service.ReadinessService;
 import com.sky.fodmap.service.utilities.Client;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +11,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import java.io.IOException;

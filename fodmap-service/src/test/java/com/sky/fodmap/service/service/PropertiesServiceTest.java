@@ -1,7 +1,6 @@
 package com.sky.fodmap.service.service;
 
 import com.sky.fodmap.service.models.ApplicationPropertiesDTO;
-import com.sky.fodmap.service.service.PropertiesService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

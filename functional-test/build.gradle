@@ -33,7 +33,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:2.5.5'
     implementation 'org.springframework.boot:spring-boot-starter-test:2.5.5'
 
-// Wirwmock
+// Wirewmock
     testImplementation "com.github.tomakehurst:wiremock-jre8:2.27.2"
     testImplementation "com.github.tomakehurst:wiremock-jre8-standalone:2.27.2"
 

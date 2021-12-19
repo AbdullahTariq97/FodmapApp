@@ -8,25 +8,20 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.sky.fodmap.service.models.FoodItem;
+import com.sky.fodmap.service.models.ReadinessDto;
 import com.sky.fodmap.service.models.StratifiedData;
 import com.sky.fodmapApp.ft.config.CucumberSpringContextConfigration;
-import com.sky.fodmap.service.models.ReadinessDto;
 import com.sky.fodmapApp.ft.utility.Client;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -165,5 +160,6 @@ public class ReadinessStepDefinitions {
 
     @When("the {string} endpoint is polled")
     public void theEndpointIsPolled(String endPoint) {
+        httpResponse = client.sendHttpRequest(endPoint);
     }
 }

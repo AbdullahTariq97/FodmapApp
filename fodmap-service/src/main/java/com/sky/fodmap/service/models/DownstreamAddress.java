@@ -1,8 +1,6 @@
 package com.sky.fodmap.service.models;
 
-import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
