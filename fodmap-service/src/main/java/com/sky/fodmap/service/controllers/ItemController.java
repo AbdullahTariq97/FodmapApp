@@ -5,11 +5,13 @@ import com.sky.fodmap.service.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/user")
 public class ItemController {
 
     @Autowired
@@ -22,6 +24,6 @@ public class ItemController {
 
     @GetMapping("/get-by-group-and-name/{group}/{name}")
     public FoodItem getByGroupAndName(@PathVariable("group") String groupName, @PathVariable("name") String name){
-        return itemService.getByGroupAndName(groupName.toLowerCase(), name.toLowerCase());
+        return itemService.getByGroupAndName(groupName.toLowerCase(), name.toLowerCase().replaceAll("-"," "));
     }
 }

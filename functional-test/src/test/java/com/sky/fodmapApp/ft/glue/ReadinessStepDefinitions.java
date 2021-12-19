@@ -8,8 +8,10 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.sky.fodmap.service.models.FoodItem;
+import com.sky.fodmap.service.models.StratifiedData;
 import com.sky.fodmapApp.ft.config.CucumberSpringContextConfigration;
 import com.sky.fodmap.service.models.ReadinessDto;
+import com.sky.fodmapApp.ft.utility.Client;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -26,6 +28,7 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -41,9 +44,13 @@ public class ReadinessStepDefinitions {
     @Autowired
     private Session cassandraSession;
 
+    @Autowired
+    private Client client;
+
     private HttpResponse<String> httpResponse;
     private static final int WIREMOCK_PORT = 9000;
     private static final WireMockServer wiremockServer = new WireMockServer(options().port(WIREMOCK_PORT));
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @PostConstruct
     public void startupWiremockServer(){
@@ -82,23 +89,16 @@ public class ReadinessStepDefinitions {
         );
     }
 
-    @When("the {string} endpoint is polled")
-    public void the_endpoint_is_polled(String endPoint) {
-        String urlString = UriComponentsBuilder
-                .fromUriString("http://localhost:8080")
-                .path(endPoint)
-                .build()
-                .toString();
+    @When("the {string} endpoint is polled with header:")
+    public void the_endpoint_is_polled(String endPoint, Map<String,String> requestHeader) {
+        List<String> headersAndValuesList = new ArrayList<>();
+        requestHeader.forEach((k,v) -> {
+            headersAndValuesList.add(k);
+            headersAndValuesList.add(v);
+        });
+        String[] headerAndValuesArray = headersAndValuesList.toArray(new String[headersAndValuesList.size()]);
+        httpResponse = client.sendHttpRequest(endPoint, headerAndValuesArray);
 
-        try {
-            URL url = new URL(urlString);
-            HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url.toString())).build();
-            HttpClient httpClient = HttpClient.newHttpClient();
-            httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Then("status code of {int} should be returned")
@@ -131,6 +131,8 @@ public class ReadinessStepDefinitions {
 
     @Given("the database is populated with a record with following keys and values:")
     public void theDatabaseIsPopulatedWithARecordWithFollowingKeysAndValues(Map<String,String> expectedRecord) {
+        // Deletes previous data in the food_item table
+        cassandraSession.execute("TRUNCATE fodmap.food_item;");
         String commaSeperatedColumns = expectedRecord.keySet().toString().replace("[","").replace("]","");
         String commaSeperatedValues = expectedRecord.values().toString().replace("[","").replace("]","");
 
@@ -146,12 +148,22 @@ public class ReadinessStepDefinitions {
 
     @Then("the service should return response containing following keys and values:")
     public void theServiceShouldReturnResponseContainingFollowingKeysAndValues(Map<String,String> expectedFoodItem) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
 
-        FoodItem returnedFoodItem = objectMapper.readValue(httpResponse.body(), new TypeReference<>() {});
-        FodmapData expectedFodmapData = objectMapper.readValue(expectedFoodItem.get("data"), new TypeReference<>() {});
+        FoodItem returnedItem = objectMapper.readValue(httpResponse.body(), new TypeReference<>() {});
+        Map<String,StratifiedData> expectedFodmapData = objectMapper.readValue(expectedFoodItem.get("data"), new TypeReference<>() {});
 
-        assertThat(returnedFoodItem).extracting("foodGroup","name").containsExactly(expectedFoodItem.get("foodGroup"),expectedFoodItem.get("name"));
-        assertThat(returnedFoodItem.getData()).usingRecursiveComparison().isEqualTo(expectedFodmapData);
+        FoodItem expectedItem = FoodItem.builder().name(expectedFoodItem.get("name")).foodGroup(expectedFoodItem.get("foodGroup")).data(expectedFodmapData).build();
+
+        assertThat(returnedItem).usingRecursiveComparison().isEqualTo(expectedItem);
+    }
+
+    @Then("the service should return error response containing following keys and values:")
+    public void error_response(Map<String,String> expectedErrorResponse) throws JsonProcessingException {
+        Map<String,String> actualErrorResponse = objectMapper.readValue(httpResponse.body(), new TypeReference<>() {});
+        assertThat(actualErrorResponse).usingRecursiveComparison().isEqualTo(expectedErrorResponse);
+    }
+
+    @When("the {string} endpoint is polled")
+    public void theEndpointIsPolled(String endPoint) {
     }
 }

@@ -63,15 +63,11 @@ public class ItemServiceTest {
     @Test
     public void givenTheItemExists_whenFoodItemRequestedByGroupAndName_shouldReturnFoodItem(){
         // Given
-        StratifiedData stratifiedDataRed = StratifiedData.builder().amountInGrams(165).fructan(Colours.RED.name()).lactose(Colours.GREEN.name()).manitol(Colours.GREEN.name())
-                .sorbitol(Colours.RED.name()).gos(Colours.GREEN.name()).fructan(Colours.GREEN.name()).build();
-        StratifiedData stratifiedDataAmber = StratifiedData.builder().amountInGrams(30).fructan(Colours.GREEN.name()).lactose(Colours.GREEN.name()).manitol(Colours.GREEN.name())
-                .sorbitol(Colours.AMBER.name()).gos(Colours.GREEN.name()).fructan(Colours.GREEN.name()).build();
-        StratifiedData stratifiedDataGreen = StratifiedData.builder().amountInGrams(25).fructan(Colours.GREEN.name()).lactose(Colours.GREEN.name()).manitol(Colours.GREEN.name())
-                .sorbitol(Colours.GREEN.name()).gos(Colours.GREEN.name()).fructan(Colours.GREEN.name()).build();
+        FoodItem itemReturnedByRepo= FoodItem.builder().foodGroup(FoodGroups.VEGITABLE.name()).name("apple, granny smith").data(
+                Map.of(Colours.RED.name(),StratifiedData.builder().amountInGrams(165).fructose("red").lactose("green").manitol("green").sorbitol("red").gos("green").fructan("green").build(),
+                        Colours.RED.name(),StratifiedData.builder().amountInGrams(30).fructose("green").lactose("green").manitol("green").sorbitol("red").gos("green").fructan("green").build(),
+                        Colours.RED.name(),StratifiedData.builder().amountInGrams(25).fructose("green").lactose("green").manitol("green").sorbitol("green").gos("green").fructan("green").build())).build();
 
-        FodmapData fodmapData = new FodmapData(Colours.RED.name(), stratifiedDataGreen, stratifiedDataAmber, stratifiedDataRed);
-        FoodItem itemReturnedByRepo= new FoodItem(FoodGroups.FRUIT.name().toLowerCase(), "apple, granny smith", fodmapData);
         when(itemRespository.findByFoodGroup(FoodGroups.FRUIT.name().toLowerCase())).thenReturn(List.of(itemReturnedByRepo));
 
         // When
@@ -94,15 +90,11 @@ public class ItemServiceTest {
     @Test
     public void givenItemWithFoodGroupExistsButNotNamet_whenFoodItemRequestedByGroupAndName_shouldThrowSuitableNotFoundException(){
         // Given
-        StratifiedData stratifiedDataRed = StratifiedData.builder().amountInGrams(165).fructan(Colours.RED.name()).lactose(Colours.GREEN.name()).manitol(Colours.GREEN.name())
-                .sorbitol(Colours.RED.name()).gos(Colours.GREEN.name()).fructan(Colours.GREEN.name()).build();
-        StratifiedData stratifiedDataAmber = StratifiedData.builder().amountInGrams(30).fructan(Colours.GREEN.name()).lactose(Colours.GREEN.name()).manitol(Colours.GREEN.name())
-                .sorbitol(Colours.AMBER.name()).gos(Colours.GREEN.name()).fructan(Colours.GREEN.name()).build();
-        StratifiedData stratifiedDataGreen = StratifiedData.builder().amountInGrams(25).fructan(Colours.GREEN.name()).lactose(Colours.GREEN.name()).manitol(Colours.GREEN.name())
-                .sorbitol(Colours.GREEN.name()).gos(Colours.GREEN.name()).fructan(Colours.GREEN.name()).build();
+        FoodItem itemReturnedByRepo = FoodItem.builder().foodGroup(FoodGroups.VEGITABLE.name()).name("apple, granny smith").data(
+                Map.of(Colours.RED.name(),StratifiedData.builder().amountInGrams(165).fructose("red").lactose("green").manitol("green").sorbitol("red").gos("green").fructan("green").build(),
+                        Colours.RED.name(),StratifiedData.builder().amountInGrams(30).fructose("green").lactose("green").manitol("green").sorbitol("red").gos("green").fructan("green").build(),
+                        Colours.RED.name(),StratifiedData.builder().amountInGrams(25).fructose("green").lactose("green").manitol("green").sorbitol("green").gos("green").fructan("green").build())).build();
 
-        FodmapData fodmapData = new FodmapData(Colours.RED.name(), stratifiedDataGreen, stratifiedDataAmber, stratifiedDataRed);
-        FoodItem itemReturnedByRepo= new FoodItem(FoodGroups.FRUIT.name().toLowerCase(), "apple, granny smith", fodmapData);
         when(itemRespository.findByFoodGroup(FoodGroups.FRUIT.name().toLowerCase())).thenReturn(List.of(itemReturnedByRepo));
 
         // When and Then

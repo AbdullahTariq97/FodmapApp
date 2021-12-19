@@ -43,6 +43,11 @@ dependencies {
 //    implementation 'org.cassandraunit:cassandra-unit-shaded:4.3.1.0'
 //    implementation 'org.hectorclient:hector-core:2.0-0'
 
+    // for header authentication when sending http requests to endpoints
+    implementation  'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    //JSON
+    implementation 'org.json:json:20201115'
 
     implementation 'com.datastax.cassandra:cassandra-driver-mapping:3.11.0'
 }

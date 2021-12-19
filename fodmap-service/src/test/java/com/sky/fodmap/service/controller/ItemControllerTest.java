@@ -3,7 +3,8 @@ package com.sky.fodmap.service.controller;
 import com.sky.fodmap.service.controllers.ItemController;
 import com.sky.fodmap.service.enums.Colours;
 import com.sky.fodmap.service.enums.FoodGroups;
-import com.sky.fodmap.service.models.*;
+import com.sky.fodmap.service.models.FoodItem;
+import com.sky.fodmap.service.models.StratifiedData;
 import com.sky.fodmap.service.service.ItemService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,9 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
@@ -52,22 +54,17 @@ public class ItemControllerTest {
     @Test
     public void whenFoodItemRequestedByGroupAndName_shouldReturnFoodItem(){
         // Given
-        StratifiedData stratifiedDataRed = StratifiedData.builder().amountInGrams(165).fructan(Colours.RED.name()).lactose(Colours.GREEN.name()).manitol(Colours.GREEN.name())
-                .sorbitol(Colours.RED.name()).gos(Colours.GREEN.name()).fructan(Colours.GREEN.name()).build();
-        StratifiedData stratifiedDataAmber = StratifiedData.builder().amountInGrams(30).fructan(Colours.GREEN.name()).lactose(Colours.GREEN.name()).manitol(Colours.GREEN.name())
-                .sorbitol(Colours.AMBER.name()).gos(Colours.GREEN.name()).fructan(Colours.GREEN.name()).build();
-        StratifiedData stratifiedDataGreen = StratifiedData.builder().amountInGrams(25).fructan(Colours.GREEN.name()).lactose(Colours.GREEN.name()).manitol(Colours.GREEN.name())
-                .sorbitol(Colours.GREEN.name()).gos(Colours.GREEN.name()).fructan(Colours.GREEN.name()).build();
+        FoodItem itemReturnedByService = FoodItem.builder().foodGroup(FoodGroups.FRUIT.name()).name("apple, granny smith").data(
+                Map.of(Colours.RED.name(),StratifiedData.builder().amountInGrams(165).fructose("red").lactose("green").manitol("green").sorbitol("red").gos("green").fructan("green").build(),
+                        Colours.GREEN.name(), StratifiedData.builder().amountInGrams(30).fructose("green").lactose("green").manitol("green").sorbitol("red").gos("green").fructan("green").build(),
+                        Colours.AMBER.name(),StratifiedData.builder().amountInGrams(25).fructose("green").lactose("green").manitol("green").sorbitol("green").gos("green").fructan("green").build())).build();
 
-        FodmapData fodmapData = new FodmapData(Colours.RED.name(), stratifiedDataGreen, stratifiedDataAmber, stratifiedDataRed);
-
-        FoodItem foodItemReturnedByService = new FoodItem(FoodGroups.FRUIT.name().toLowerCase(), "apple, granny smith", fodmapData);
-        when(itemService.getByGroupAndName("fruit","apple")).thenReturn(foodItemReturnedByService);
+        when(itemService.getByGroupAndName("fruit","apple, granny smith")).thenReturn(itemReturnedByService);
 
         // When
-        FoodItem foodItemReturned = foodItemController.getByGroupAndName(FoodGroups.FRUIT.name().toLowerCase(), "apple");
+        FoodItem foodItemReturned = foodItemController.getByGroupAndName(FoodGroups.FRUIT.name().toLowerCase(), "apple, granny smith");
 
         // Then
-        assertEquals(foodItemReturned, foodItemReturnedByService);
+        assertEquals(foodItemReturned, itemReturnedByService);
     }
 }

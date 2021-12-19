@@ -26,5 +26,10 @@ spring:
   data:
     cassandra:
       port: 9042
+#      Change this to cassandra-service when deploying to local k8s cluster
       contact-points: 127.0.0.1
       keyspace-name: fodmap
+  security:
+    user:
+      name: username
+      password: password

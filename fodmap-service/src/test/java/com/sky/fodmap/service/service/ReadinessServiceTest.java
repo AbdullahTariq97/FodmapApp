@@ -27,10 +27,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class ReadinessServiceTest {
 
+    // Requires spring context to be spun up to get the bean this type of bean from context
     @SpyBean
     private List<DownstreamAddress> listOfDownstreamAddresses;
 
