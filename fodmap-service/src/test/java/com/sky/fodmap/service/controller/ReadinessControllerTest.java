@@ -32,7 +32,6 @@ public class ReadinessControllerTest {
 
     @Test
     public void whenReadinessControllerMethodInvokedShouldReturnReadinessDTO(){
-        // Before we invoke the method we want to test, we will mock the dependencies for this method to isolate the logic and then stub their responses
         ApplicationPropertiesDTO applicationPropertiesDTO = new ApplicationPropertiesDTO();
         applicationPropertiesDTO.setName("FodmapApp");
         applicationPropertiesDTO.setEnvironment("[]");
@@ -40,11 +39,14 @@ public class ReadinessControllerTest {
         when(propertiesService.getProperties()).thenReturn(applicationPropertiesDTO);
 
         Map<String, DownstreamDto> downstreams = new HashMap<>();
+
         DownstreamDto downstreamDto = new DownstreamDto();
         downstreamDto.setHealthy(true);
+
         Map<String, String> additionalProperty1 = new HashMap<>();
         additionalProperty1.put("response", null);
         downstreamDto.setAdditionalProp1(additionalProperty1);
+
         downstreams.put("HeightApp", downstreamDto);
         when(readinessService.getServices()).thenReturn(downstreams);
 

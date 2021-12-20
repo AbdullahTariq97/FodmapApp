@@ -31,6 +31,7 @@ import static org.mockito.Mockito.*;
 public class ReadinessServiceTest {
 
     // Requires spring context to be spun up to get the bean this type of bean from context
+    // Taken bean from application context/ ioc container and injects it as spy into readiness service
     @SpyBean
     private List<DownstreamAddress> listOfDownstreamAddresses;
 
