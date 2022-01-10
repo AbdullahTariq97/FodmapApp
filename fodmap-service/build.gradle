@@ -34,9 +34,6 @@ dependencies {
     implementation 'org.springframework.data:spring-data-cassandra:2.2.10.RELEASE'
 // Why do we have to add this to avoid Caused by: java.lang.ClassNotFoundException: com.codahale.metrics.JmxReporter
     implementation 'com.codahale.metrics:metrics-core:3.0.2'
-
-
-
 //
 //    // For running embedded cassandra
 //    implementation 'org.cassandraunit:cassandra-unit-spring:4.3.1.0'
@@ -50,6 +47,9 @@ dependencies {
     implementation 'org.json:json:20201115'
 
     implementation 'com.datastax.cassandra:cassandra-driver-mapping:3.11.0'
+
+    testImplementation 'org.mockito:mockito-inline:3.4.6'
+    compile "io.github.resilience4j:resilience4j-circuitbreaker:1.7.1"
 }
 
 processResources {

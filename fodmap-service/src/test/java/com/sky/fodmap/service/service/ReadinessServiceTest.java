@@ -1,8 +1,12 @@
 package com.sky.fodmap.service.service;
 
+import com.datastax.driver.core.Session;
 import com.sky.fodmap.service.models.DownstreamAddress;
 import com.sky.fodmap.service.models.DownstreamDto;
 import com.sky.fodmap.service.utilities.Client;
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -10,8 +14,10 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import java.io.IOException;
@@ -27,19 +33,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest
+//@SpringBootTest
 public class ReadinessServiceTest {
 
-    // Requires spring context to be spun up to get the bean this type of bean from context
-    // Taken bean from application context/ ioc container and injects it as spy into readiness service
-    @SpyBean
-    private List<DownstreamAddress> listOfDownstreamAddresses;
-
-    @Mock
     private Client client;
 
-    @InjectMocks
     private ReadinessService readinessService;
+
+    private List<DownstreamAddress> listOfDownstreamAddresses = List.of(new DownstreamAddress("HeightApp", "http://localhost:9000/heightapp")
+            , new DownstreamAddress("SleepApp", "http://localhost:9000/sleepapp"));
+
+    @BeforeEach
+    public void setup(){
+        client = mock(Client.class);
+        readinessService = new ReadinessService(client, listOfDownstreamAddresses);
+    }
+
 
     @Test
     public void givenResponseBodyContainsOKForBothApps_shouldReturnApporpriateMap() throws IOException, InterruptedException {
@@ -123,4 +132,5 @@ public class ReadinessServiceTest {
         return Stream.of(Arguments.of(IOException.class, "java.io.IOException"),
                 Arguments.of(InterruptedException.class, "java.lang.InterruptedException"));
     }
+
 }

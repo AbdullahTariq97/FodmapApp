@@ -120,6 +120,7 @@ public class ReadinessStepDefinitions {
     @Then("the service should return response matching list below:")
     public void theServiceShouldReturnResponseMatchingListBelow(List<String> expectedFoodGroup) {
         ObjectMapper objectMapper = new ObjectMapper();
+        // prefer using readValue method, although it throws checked exceptions, it is better at conversions
         List<String> returnedListOfFoodGroups = objectMapper.convertValue(httpResponse.body(), new TypeReference<>() {});
         assertEquals(expectedFoodGroup, returnedListOfFoodGroups);
     }

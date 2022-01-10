@@ -18,11 +18,15 @@ import java.util.Map;
 @Service
 public class ReadinessService {
 
-    @Autowired
     private Client client;
 
-    @Autowired
     public List<DownstreamAddress> listOfDownstreamAddresses;
+
+    @Autowired
+    public ReadinessService(Client client, List<DownstreamAddress> downstreamAddressList){
+        this.client = client;
+        this.listOfDownstreamAddresses = downstreamAddressList;
+    }
 
     public Map<String, DownstreamDto> getServices(){
 
