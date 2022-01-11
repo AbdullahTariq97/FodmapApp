@@ -6,6 +6,7 @@ import com.sky.fodmap.service.models.DownstreamDto;
 import com.sky.fodmap.service.utilities.Client;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.data.cassandra.config.CassandraSessionFactoryBean;
 
 import java.io.IOException;
 import java.net.http.HttpResponse;
@@ -33,12 +35,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-//@SpringBootTest
+@SpringBootTest
 public class ReadinessServiceTest {
 
     private Client client;
 
     private ReadinessService readinessService;
+
+    @MockBean
+    private CircuitBreakerRegistry circuitBreakerRegistryMock;
 
     private List<DownstreamAddress> listOfDownstreamAddresses = List.of(new DownstreamAddress("HeightApp", "http://localhost:9000/heightapp")
             , new DownstreamAddress("SleepApp", "http://localhost:9000/sleepapp"));
@@ -46,9 +51,8 @@ public class ReadinessServiceTest {
     @BeforeEach
     public void setup(){
         client = mock(Client.class);
-        readinessService = new ReadinessService(client, listOfDownstreamAddresses);
+        readinessService = new ReadinessService(client, listOfDownstreamAddresses,circuitBreakerRegistryMock);
     }
-
 
     @Test
     public void givenResponseBodyContainsOKForBothApps_shouldReturnApporpriateMap() throws IOException, InterruptedException {
@@ -133,4 +137,35 @@ public class ReadinessServiceTest {
                 Arguments.of(InterruptedException.class, "java.lang.InterruptedException"));
     }
 
+    @Test
+    public void whenReadinessEndpointCalled_shouldInvokeCircuitBreaker() throws IOException, InterruptedException {
+        // Given
+        HttpResponse<String> responseMock = mock(HttpResponse.class);
+//        when(responseMock.body()).thenReturn("OK");
+//        when(client.sendHttpRequest("http://localhost:9000/heightapp")).thenReturn(responseMock);
+//        when(client.sendHttpRequest("http://localhost:9000/sleepapp")).thenReturn(responseMock);
+
+        CircuitBreaker circuitBreakerMock = mock(CircuitBreaker.class);
+        when(circuitBreakerRegistryMock.circuitBreaker("circuit-breaker")).thenReturn(circuitBreakerMock);
+
+        MockedStatic<CircuitBreaker> circuitBreakerStaticMock = mockStatic(CircuitBreaker.class);
+
+        // When
+        readinessService.getServices();
+
+        // Then
+        verify(circuitBreakerRegistryMock).circuitBreaker("circuit-breaker");
+
+        circuitBreakerStaticMock.verify(() -> CircuitBreaker
+                    .decorateCallable(eq(circuitBreakerMock),any()), times(2));
+
+        circuitBreakerStaticMock.close();
+
+        // When the readinessService.getService method is called it does not have
+//        try(MockedStatic<CircuitBreaker> circuitBreakerStaticMock = mockStatic(CircuitBreaker.class)){
+//            circuitBreakerStaticMock.verify(() -> CircuitBreaker
+//                    .decorateCallable(eq(circuitBreakerMock),any()));
+//        }
+
+    }
 }
