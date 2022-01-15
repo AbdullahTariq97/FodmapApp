@@ -50,6 +50,9 @@ dependencies {
 
     testImplementation 'org.mockito:mockito-inline:3.4.6'
     compile "io.github.resilience4j:resilience4j-circuitbreaker:1.7.1"
+
+    // for creating metrics
+    implementation 'io.micrometer:micrometer-registry-prometheus:1.7.5'
 }
 
 processResources {

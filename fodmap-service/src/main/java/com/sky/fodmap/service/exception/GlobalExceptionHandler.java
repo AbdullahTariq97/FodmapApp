@@ -15,4 +15,5 @@ public class GlobalExceptionHandler {
                 + " " + notFoundException.getFieldValue()
                 + " not found");
     }
+
 }

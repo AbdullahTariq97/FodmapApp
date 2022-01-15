@@ -8,9 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Endpoint(id = "readiness")
-@Component
+@RestController
 public class ReadinessController {
 
     @Autowired
@@ -19,8 +20,8 @@ public class ReadinessController {
     @Autowired
     private ReadinessService readinessService;
 
-    @ReadOperation
-    public ReadinessDto readinessController() {
+    @GetMapping("/private/readiness")
+    public ReadinessDto getDownstreamsStatus() {
 
         ReadinessDto readinessDTO = new ReadinessDto();
 

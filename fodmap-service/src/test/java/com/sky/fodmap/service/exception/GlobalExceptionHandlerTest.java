@@ -1,6 +1,7 @@
 package com.sky.fodmap.service.exception;
 
 import com.sky.fodmap.service.controllers.ItemController;
+import com.sky.fodmap.service.controllers.ReadinessController;
 import com.sky.fodmap.service.enums.FoodGroups;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,16 +24,21 @@ public class GlobalExceptionHandlerTest {
     @Mock
     private ItemController itemController;
 
+    @Mock
+    private ReadinessController readinessController;
+
     private MockMvc mockMvc;
+
+    private GlobalExceptionHandler globalExceptionHandler;
 
     @BeforeEach
     public void setup(){
-        mockMvc = MockMvcBuilders.standaloneSetup(itemController).setControllerAdvice(new GlobalExceptionHandler()).build();
+        globalExceptionHandler = new GlobalExceptionHandler();
+        mockMvc = MockMvcBuilders.standaloneSetup(itemController, readinessController).setControllerAdvice(globalExceptionHandler).build();
     }
 
     @Test
     public void whenNotFoundExceptionPassed_shouldReturnSuitableResponse(){
-        GlobalExceptionHandler globalExceptionHandler = new GlobalExceptionHandler();
         ResponseEntity<String> responseEntity = globalExceptionHandler.handleNotFoundException(new NotFoundException("food group", FoodGroups.FRUIT.name().toLowerCase()));
         assertThat(responseEntity).extracting("body").isEqualTo("Food item with food group fruit not found");
     }
@@ -48,6 +54,4 @@ public class GlobalExceptionHandlerTest {
                 .andExpect(status().is(404))
                 .andExpect(content().string("Food item with food group dairy not found"));
     }
-
-
 }

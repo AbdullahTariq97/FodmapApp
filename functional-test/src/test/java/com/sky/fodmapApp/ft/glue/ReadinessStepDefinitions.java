@@ -7,15 +7,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.sky.fodmap.service.FodmapApplication;
 import com.sky.fodmap.service.models.FoodItem;
 import com.sky.fodmap.service.models.ReadinessDto;
 import com.sky.fodmap.service.models.StratifiedData;
 import com.sky.fodmapApp.ft.config.CucumberSpringContextConfigration;
+import com.sky.fodmapApp.ft.config.FodmapServiceConfig;
 import com.sky.fodmapApp.ft.utility.Client;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 
 import javax.annotation.PostConstruct;
@@ -105,7 +110,8 @@ public class ReadinessStepDefinitions {
     public void the_response_body_matching_should_be_returned(String mappingFileName) {
         ObjectMapper objectMapper = new ObjectMapper();
         // Load the stream of expected ReadinessDTO's
-        Optional<InputStream> stream = Optional.ofNullable(getClass().getClassLoader().getResourceAsStream("features/expected-mappings/" + mappingFileName));
+        Optional<InputStream> stream = Optional.ofNullable(getClass().getClassLoader()
+                .getResourceAsStream("features/expected-mappings/" + mappingFileName));
         if(!stream.isEmpty()){
             try {
                 ReadinessDto actualReadinessDto = objectMapper.readValue(httpResponse.body(), ReadinessDto.class);
@@ -162,5 +168,34 @@ public class ReadinessStepDefinitions {
     @When("the {string} endpoint is polled")
     public void theEndpointIsPolled(String endPoint) {
         httpResponse = client.sendHttpRequest(endPoint);
+    }
+
+    @Given("{string} is not responding in {int} sec")
+    public void isNotRespondingInSec(String appName, int timeout) {
+        stubFor(
+                get(urlEqualTo("/" + appName.toLowerCase()))
+                        .willReturn(
+                                aResponse()
+                                        .withHeader("Content-Type","text/plain")
+                                        .withStatus(200)
+                                        .withFixedDelay(timeout * 1000)
+
+                        )
+        );
+    }
+
+
+    @Then("the response body should contain string {string}")
+    public void theResponseBodyShouldContainStringHeightAppTrue(String metricString) {
+        assertThat(httpResponse.body().contains(metricString)).isTrue();
+    }
+
+    @Autowired
+    FodmapServiceConfig fodmapServiceConfig;
+
+    @Given("application is restarted")
+    public void applicationIsRestarted() {
+        fodmapServiceConfig.stopFodmapService();
+        fodmapServiceConfig.startupFodmapService();
     }
 }

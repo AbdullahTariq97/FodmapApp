@@ -12,5 +12,5 @@ import java.util.Map;
 public class DownstreamDto {
 
     private boolean isHealthy;
-    private Map<String, String> additionalProp1;
+    private String response;
 }

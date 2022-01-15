@@ -3,11 +3,11 @@
   "applicationEnvironment": "[]",
   "applicationVersion": "0.0.1-SNAPSHOT",
   "checkResults": {
-    "HeightApp": {
+    "SleepApp": {
       "response": "OK",
       "healthy": true
     },
-    "SleepApp": {
+    "HeightApp": {
       "response": null,
       "healthy": false
     }

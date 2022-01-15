@@ -4,15 +4,11 @@
   "applicationVersion": "0.0.1-SNAPSHOT",
   "checkResults": {
     "SleepApp": {
-      "additionalProp1": {
-        "response": null
-      },
+      "response": "OK",
       "healthy": true
     },
     "HeightApp": {
-      "additionalProp1": {
-        "response": null
-      },
+      "response": "OK",
       "healthy": true
     }
   }

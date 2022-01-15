@@ -1,5 +1,5 @@
 Feature: should be able to return list of food items
-  @my-test
+
   Scenario: should be able to return all food items in the database
     Given the database is populated with a record with following keys and values:
     | food_group | 'vegitable'                                                                    |

@@ -38,20 +38,14 @@ public class ReadinessControllerTest {
         applicationPropertiesDTO.setVersion("0.0.1-SNAPSHOT");
         when(propertiesService.getProperties()).thenReturn(applicationPropertiesDTO);
 
-        Map<String, DownstreamDto> downstreams = new HashMap<>();
+        DownstreamDto downstreamDto = new DownstreamDto(true, "OK");
 
-        DownstreamDto downstreamDto = new DownstreamDto();
-        downstreamDto.setHealthy(true);
+        Map<String, DownstreamDto> downstreams = Map.of("HeightApp",downstreamDto);
 
-        Map<String, String> additionalProperty1 = new HashMap<>();
-        additionalProperty1.put("response", null);
-        downstreamDto.setAdditionalProp1(additionalProperty1);
-
-        downstreams.put("HeightApp", downstreamDto);
         when(readinessService.getServices()).thenReturn(downstreams);
 
         // Act
-        ReadinessDto readinessDTO = readinessController.readinessController();
+        ReadinessDto readinessDTO = readinessController.getDownstreamsStatus();
 
         //Assert
         Assertions.assertThat(readinessDTO).extracting("applicationName", "applicationEnvironment", "applicationVersion", "checkResults")
