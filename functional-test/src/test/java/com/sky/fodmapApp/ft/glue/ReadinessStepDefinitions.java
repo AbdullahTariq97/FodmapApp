@@ -190,12 +190,33 @@ public class ReadinessStepDefinitions {
         assertThat(httpResponse.body().contains(metricString)).isTrue();
     }
 
-    @Autowired
-    FodmapServiceConfig fodmapServiceConfig;
 
-    @Given("application is restarted")
-    public void applicationIsRestarted() {
-        fodmapServiceConfig.stopFodmapService();
-        fodmapServiceConfig.startupFodmapService();
+    HttpResponse<String> initialResponse;
+    HttpResponse<String> afterResponse;
+
+    @When("the {string} and then {string} endpoints are polled")
+    public void theAndEndpointsArePolled(String incrementingEndpoint, String metricsEndpoint) {
+        initialResponse = client.sendHttpRequest(metricsEndpoint);
+        client.sendHttpRequest(incrementingEndpoint);
+        afterResponse = client.sendHttpRequest(metricsEndpoint);
+    }
+
+
+    @Then("the  metric {string} should increment by {int}")
+    public void theMetricHeightAppTrueShouldIncrementBy(String metricString, int count) {
+            double before  = metricsParser(initialResponse, metricString);
+            double after =  metricsParser(afterResponse, metricString);
+            assertThat(after - before).isEqualTo(count);
+    }
+
+    private double metricsParser(HttpResponse<String> response, String metricsString){
+        String[] lines = response.body().split("\n");
+        for(String line : lines){
+            if(line.contains(metricsString)){
+                String value = line.split(" ")[1];
+                return Double.parseDouble(value);
+            }
+        }
+        return 0.0;
     }
 }

@@ -11,7 +11,6 @@ Feature: should be able to return list of food items
     Then the service should return list matching:
     | vegitable |
 
-
   Scenario: when API polled without valid header authentication should return error response
     Given the database is populated with a record with following keys and values:
       | food_group | 'vegitable'                                                                    |
