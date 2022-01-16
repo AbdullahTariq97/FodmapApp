@@ -51,6 +51,8 @@ public class ReadinessStepDefinitions {
     private static final int WIREMOCK_PORT = 9000;
     private static final WireMockServer wiremockServer = new WireMockServer(options().port(WIREMOCK_PORT));
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    private HttpResponse<String> initialResponse;
+    private HttpResponse<String> afterResponse;
 
     @PostConstruct
     public void startupWiremockServer(){
@@ -85,6 +87,30 @@ public class ReadinessStepDefinitions {
                                         .withHeader("Content-Type","text/plain")
                                         .withStatus(500)
                                         .withBody("response body of downstream")
+                        )
+        );
+    }
+
+    @Given("the database is populated with a record with following keys and values:")
+    public void theDatabaseIsPopulatedWithARecordWithFollowingKeysAndValues(Map<String,String> expectedRecord) {
+        // Deletes previous data in the food_item table
+        cassandraSession.execute("TRUNCATE fodmap.food_item;");
+        String commaSeperatedColumns = expectedRecord.keySet().toString().replace("[","").replace("]","");
+        String commaSeperatedValues = expectedRecord.values().toString().replace("[","").replace("]","");
+
+        cassandraSession.execute(String.format("INSERT INTO fodmap.food_item (%s) VALUES(%s);",commaSeperatedColumns, commaSeperatedValues));
+    }
+
+    @Given("{string} is not responding in {int} sec")
+    public void isNotRespondingInSec(String appName, int timeout) {
+        stubFor(
+                get(urlEqualTo("/" + appName.toLowerCase()))
+                        .willReturn(
+                                aResponse()
+                                        .withHeader("Content-Type","text/plain")
+                                        .withStatus(200)
+                                        .withFixedDelay(timeout * 1000)
+
                         )
         );
     }
@@ -131,16 +157,6 @@ public class ReadinessStepDefinitions {
         assertEquals(expectedFoodGroup, returnedListOfFoodGroups);
     }
 
-    @Given("the database is populated with a record with following keys and values:")
-    public void theDatabaseIsPopulatedWithARecordWithFollowingKeysAndValues(Map<String,String> expectedRecord) {
-        // Deletes previous data in the food_item table
-        cassandraSession.execute("TRUNCATE fodmap.food_item;");
-        String commaSeperatedColumns = expectedRecord.keySet().toString().replace("[","").replace("]","");
-        String commaSeperatedValues = expectedRecord.values().toString().replace("[","").replace("]","");
-
-        cassandraSession.execute(String.format("INSERT INTO fodmap.food_item (%s) VALUES(%s);",commaSeperatedColumns, commaSeperatedValues));
-    }
-
     @Then("the service should return list matching:")
     public void theServiceShouldReturnListMatching(List<String> expectedListOfFoodGroups) throws JsonProcessingException {
         JsonMapper jsonMapper = new JsonMapper();
@@ -170,37 +186,12 @@ public class ReadinessStepDefinitions {
         httpResponse = client.sendHttpRequest(endPoint);
     }
 
-    @Given("{string} is not responding in {int} sec")
-    public void isNotRespondingInSec(String appName, int timeout) {
-        stubFor(
-                get(urlEqualTo("/" + appName.toLowerCase()))
-                        .willReturn(
-                                aResponse()
-                                        .withHeader("Content-Type","text/plain")
-                                        .withStatus(200)
-                                        .withFixedDelay(timeout * 1000)
-
-                        )
-        );
-    }
-
-
-    @Then("the response body should contain string {string}")
-    public void theResponseBodyShouldContainStringHeightAppTrue(String metricString) {
-        assertThat(httpResponse.body().contains(metricString)).isTrue();
-    }
-
-
-    HttpResponse<String> initialResponse;
-    HttpResponse<String> afterResponse;
-
     @When("the {string} and then {string} endpoints are polled")
     public void theAndEndpointsArePolled(String incrementingEndpoint, String metricsEndpoint) {
         initialResponse = client.sendHttpRequest(metricsEndpoint);
         client.sendHttpRequest(incrementingEndpoint);
         afterResponse = client.sendHttpRequest(metricsEndpoint);
     }
-
 
     @Then("the  metric {string} should increment by {int}")
     public void theMetricHeightAppTrueShouldIncrementBy(String metricString, int count) {
